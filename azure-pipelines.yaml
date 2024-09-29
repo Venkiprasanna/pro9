@@ -13,24 +13,24 @@ steps:
     azureSubscription: 'azureserviceconnection'  # Replace this with your Azure DevOps service connection name
     scriptType: 'bash'
     scriptLocation: 'inlineScript'
-inlineScript: |
-  # Login to Azure Container Registry (ACR)
-  az acr login --name aksdocimg
+    inlineScript: |
+      # Login to Azure Container Registry (ACR)
+      az acr login --name aksdocimg
 
-  # Build Docker image with a unique tag using the build ID from Azure DevOps
-  docker build -t aksdocimg.azurecr.io/myapp:$(Build.BuildId) .
+      # Build Docker image with a unique tag using the build ID from Azure DevOps
+      docker build -t aksdocimg.azurecr.io/myapp:$(Build.BuildId) .
 
-  # Push Docker image to Azure Container Registry (ACR)
-  docker push aksdocimg.azurecr.io/myapp:$(Build.BuildId)
+      # Push Docker image to Azure Container Registry (ACR)
+      docker push aksdocimg.azurecr.io/myapp:$(Build.BuildId)
 
-  # Configure Kubernetes context for AKS (fetch credentials for kubectl)
-  az aks get-credentials --resource-group myResourceGroup --name myAKSCluster
+      # Configure Kubernetes context for AKS (fetch credentials for kubectl)
+      az aks get-credentials --resource-group myResourceGroup --name myAKSCluster
 
-  # Update the Kubernetes deployment with the new Docker image
-  kubectl set image deployment/myapp-deployment myapp=aksdocimg.azurecr.io/myapp:$(Build.BuildId)
+      # Update the Kubernetes deployment with the new Docker image
+      kubectl set image deployment/myapp-deployment myapp=aksdocimg.azurecr.io/myapp:$(Build.BuildId)
 
-  # Optionally, apply deployment.yaml (if you are not using 'kubectl set image')
-  # kubectl apply -f deployment.yaml
+      # Optionally, apply deployment.yaml (if you are not using 'kubectl set image')
+      # kubectl apply -f deployment.yaml
 
 
 # Step 2: Configure Kubernetes Context and Deploy the Application
