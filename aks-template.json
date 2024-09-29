@@ -1,0 +1,35 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "clientId": {
+        "type": "string"
+      },
+      "clientSecret": {
+        "type": "securestring"
+      }
+    },
+    "resources": [
+      {
+        "type": "Microsoft.ContainerService/managedClusters",
+        "apiVersion": "2021-03-01",
+        "location": "[resourceGroup().location]",
+        "name": "myAKSCluster",
+        "properties": {
+          "dnsPrefix": "myakscluster",
+          "agentPoolProfiles": [
+            {
+              "name": "nodepool1",
+              "count": 1,
+              "vmSize": "Standard_DS2_v2"
+            }
+          ],
+          "servicePrincipalProfile": {
+            "clientId": "[parameters('clientId')]",
+            "secret": "[parameters('clientSecret')]"
+          }
+        }
+      }
+    ]
+  }
+  
